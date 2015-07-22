@@ -1,6 +1,6 @@
 <?php
 
-namespace Illuminate\Container;
+namespace NetRivet\Container;
 
 use Closure;
 use ArrayAccess;
@@ -9,10 +9,8 @@ use ReflectionMethod;
 use ReflectionFunction;
 use ReflectionParameter;
 use InvalidArgumentException;
-use Illuminate\Contracts\Container\BindingResolutionException;
-use Illuminate\Contracts\Container\Container as ContainerContract;
 
-class Container implements ArrayAccess, ContainerContract
+class Container implements ArrayAccess, ContainerInterface
 {
     /**
      * The current globally available container (if any).
@@ -26,97 +24,97 @@ class Container implements ArrayAccess, ContainerContract
      *
      * @var array
      */
-    protected $resolved = [];
+    protected $resolved = array();
 
     /**
      * The container's bindings.
      *
      * @var array
      */
-    protected $bindings = [];
+    protected $bindings = array();
 
     /**
      * The container's shared instances.
      *
      * @var array
      */
-    protected $instances = [];
+    protected $instances = array();
 
     /**
      * The registered type aliases.
      *
      * @var array
      */
-    protected $aliases = [];
+    protected $aliases = array();
 
     /**
      * The extension closures for services.
      *
      * @var array
      */
-    protected $extenders = [];
+    protected $extenders = array();
 
     /**
      * All of the registered tags.
      *
      * @var array
      */
-    protected $tags = [];
+    protected $tags = array();
 
     /**
      * The stack of concretions being current built.
      *
      * @var array
      */
-    protected $buildStack = [];
+    protected $buildStack = array();
 
     /**
      * The contextual binding map.
      *
      * @var array
      */
-    public $contextual = [];
+    public $contextual = array();
 
     /**
      * All of the registered rebound callbacks.
      *
      * @var array
      */
-    protected $reboundCallbacks = [];
+    protected $reboundCallbacks = array();
 
     /**
      * All of the global resolving callbacks.
      *
      * @var array
      */
-    protected $globalResolvingCallbacks = [];
+    protected $globalResolvingCallbacks = array();
 
     /**
      * All of the global after resolving callbacks.
      *
      * @var array
      */
-    protected $globalAfterResolvingCallbacks = [];
+    protected $globalAfterResolvingCallbacks = array();
 
     /**
      * All of the after resolving callbacks by class type.
      *
      * @var array
      */
-    protected $resolvingCallbacks = [];
+    protected $resolvingCallbacks = array();
 
     /**
      * All of the after resolving callbacks by class type.
      *
      * @var array
      */
-    protected $afterResolvingCallbacks = [];
+    protected $afterResolvingCallbacks = array();
 
     /**
      * Define a contextual binding.
      *
      * @param  string  $concrete
-     * @return \Illuminate\Contracts\Container\ContextualBindingBuilder
+     * @return \NetRivet\Container\ContextualBindingBuilder
      */
     public function when($concrete)
     {
@@ -210,7 +208,7 @@ class Container implements ArrayAccess, ContainerContract
      */
     protected function getClosure($abstract, $concrete)
     {
-        return function ($c, $parameters = []) use ($abstract, $concrete) {
+        return function ($c, $parameters = array()) use ($abstract, $concrete) {
             $method = ($abstract == $concrete) ? 'build' : 'make';
 
             return $c->$method($concrete, $parameters);
@@ -343,7 +341,7 @@ class Container implements ArrayAccess, ContainerContract
 
         foreach ($tags as $tag) {
             if (!isset($this->tags[$tag])) {
-                $this->tags[$tag] = [];
+                $this->tags[$tag] = array();
             }
 
             foreach ((array) $abstracts as $abstract) {
@@ -360,7 +358,7 @@ class Container implements ArrayAccess, ContainerContract
      */
     public function tagged($tag)
     {
-        $results = [];
+        $results = array();
 
         if (isset($this->tags[$tag])) {
             foreach ($this->tags[$tag] as $abstract) {
@@ -391,7 +389,7 @@ class Container implements ArrayAccess, ContainerContract
      */
     protected function extractAlias(array $definition)
     {
-        return [key($definition), current($definition)];
+        return array(key($definition), current($definition));
     }
 
     /**
@@ -452,7 +450,7 @@ class Container implements ArrayAccess, ContainerContract
             return $this->reboundCallbacks[$abstract];
         }
 
-        return [];
+        return array();
     }
 
     /**
@@ -462,7 +460,7 @@ class Container implements ArrayAccess, ContainerContract
      * @param  array  $parameters
      * @return \Closure
      */
-    public function wrap(Closure $callback, array $parameters = [])
+    public function wrap(Closure $callback, array $parameters = array())
     {
         return function () use ($callback, $parameters) {
             return $this->call($callback, $parameters);
@@ -477,7 +475,7 @@ class Container implements ArrayAccess, ContainerContract
      * @param  string|null  $defaultMethod
      * @return mixed
      */
-    public function call($callback, array $parameters = [], $defaultMethod = null)
+    public function call($callback, array $parameters = array(), $defaultMethod = null)
     {
         if ($this->isCallableWithAtSign($callback) || $defaultMethod) {
             return $this->callClass($callback, $parameters, $defaultMethod);
@@ -510,9 +508,9 @@ class Container implements ArrayAccess, ContainerContract
      * @param  array  $parameters
      * @return array
      */
-    protected function getMethodDependencies($callback, array $parameters = [])
+    protected function getMethodDependencies($callback, array $parameters = array())
     {
-        $dependencies = [];
+        $dependencies = array();
 
         foreach ($this->getCallReflector($callback)->getParameters() as $key => $parameter) {
             $this->addDependencyForCallParameter($parameter, $parameters, $dependencies);
@@ -569,7 +567,7 @@ class Container implements ArrayAccess, ContainerContract
      * @param  string|null  $defaultMethod
      * @return mixed
      */
-    protected function callClass($target, array $parameters = [], $defaultMethod = null)
+    protected function callClass($target, array $parameters = array(), $defaultMethod = null)
     {
         $segments = explode('@', $target);
 
@@ -582,7 +580,7 @@ class Container implements ArrayAccess, ContainerContract
             throw new InvalidArgumentException('Method not provided.');
         }
 
-        return $this->call([$this->make($segments[0]), $method], $parameters);
+        return $this->call(array($this->make($segments[0]), $method), $parameters);
     }
 
     /**
@@ -592,7 +590,7 @@ class Container implements ArrayAccess, ContainerContract
      * @param  array   $parameters
      * @return mixed
      */
-    public function make($abstract, array $parameters = [])
+    public function make($abstract, array $parameters = array())
     {
         $abstract = $this->getAlias($abstract);
 
@@ -698,7 +696,7 @@ class Container implements ArrayAccess, ContainerContract
             return $this->extenders[$abstract];
         }
 
-        return [];
+        return array();
     }
 
     /**
@@ -708,9 +706,9 @@ class Container implements ArrayAccess, ContainerContract
      * @param  array   $parameters
      * @return mixed
      *
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws \NetRivet\Container\BindingResolutionException
      */
-    public function build($concrete, array $parameters = [])
+    public function build($concrete, array $parameters = array())
     {
         // If the concrete type is actually a Closure, we will just execute it and
         // hand back the results of the functions, which allows functions to be
@@ -768,9 +766,9 @@ class Container implements ArrayAccess, ContainerContract
      * @param  array  $primitives
      * @return array
      */
-    protected function getDependencies(array $parameters, array $primitives = [])
+    protected function getDependencies(array $parameters, array $primitives = array())
     {
-        $dependencies = [];
+        $dependencies = array();
 
         foreach ($parameters as $parameter) {
             $dependency = $parameter->getClass();
@@ -796,7 +794,7 @@ class Container implements ArrayAccess, ContainerContract
      * @param  \ReflectionParameter  $parameter
      * @return mixed
      *
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws \NetRivet\Container\BindingResolutionException
      */
     protected function resolveNonClass(ReflectionParameter $parameter)
     {
@@ -815,7 +813,7 @@ class Container implements ArrayAccess, ContainerContract
      * @param  \ReflectionParameter  $parameter
      * @return mixed
      *
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws \NetRivet\Container\BindingResolutionException
      */
     protected function resolveClass(ReflectionParameter $parameter)
     {
@@ -935,7 +933,8 @@ class Container implements ArrayAccess, ContainerContract
             return;
         }
 
-        $expected = $function->getParameters()[0];
+        $parameters = $function->getParameters();
+        $expected = $parameters[0];
 
         if (!$expected->getClass()) {
             return;
@@ -981,7 +980,7 @@ class Container implements ArrayAccess, ContainerContract
      */
     protected function getCallbacksForType($abstract, $object, array $callbacksPerType)
     {
-        $results = [];
+        $results = array();
 
         foreach ($callbacksPerType as $type => $callbacks) {
             if ($type === $abstract || $object instanceof $type) {
@@ -1084,7 +1083,7 @@ class Container implements ArrayAccess, ContainerContract
      */
     public function forgetInstances()
     {
-        $this->instances = [];
+        $this->instances = array();
     }
 
     /**
@@ -1094,10 +1093,10 @@ class Container implements ArrayAccess, ContainerContract
      */
     public function flush()
     {
-        $this->aliases = [];
-        $this->resolved = [];
-        $this->bindings = [];
-        $this->instances = [];
+        $this->aliases = array();
+        $this->resolved = array();
+        $this->bindings = array();
+        $this->instances = array();
     }
 
     /**
@@ -1113,10 +1112,10 @@ class Container implements ArrayAccess, ContainerContract
     /**
      * Set the shared instance of the container.
      *
-     * @param  \Illuminate\Contracts\Container\Container  $container
+     * @param  \NetRivet\Container\ContainerInterface  $container
      * @return void
      */
-    public static function setInstance(ContainerContract $container)
+    public static function setInstance(ContainerInterface $container)
     {
         static::$instance = $container;
     }
