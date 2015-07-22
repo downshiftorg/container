@@ -1,15 +1,13 @@
 <?php
 
-namespace Illuminate\Container;
+namespace NetRivet\Container;
 
-use Illuminate\Contracts\Container\ContextualBindingBuilder as ContextualBindingBuilderContract;
-
-class ContextualBindingBuilder implements ContextualBindingBuilderContract
+class ContextualBindingBuilder implements ContextualBindingBuilderInterface
 {
     /**
      * The underlying container instance.
      *
-     * @var \Illuminate\Container\Container
+     * @var \NetRivet\Container\ContainerInterface
      */
     protected $container;
 
@@ -30,11 +28,11 @@ class ContextualBindingBuilder implements ContextualBindingBuilderContract
     /**
      * Create a new contextual binding builder.
      *
-     * @param  \Illuminate\Container\Container  $container
+     * @param  \NetRivet\Container\ContainerInterface  $container
      * @param  string  $concrete
      * @return void
      */
-    public function __construct(Container $container, $concrete)
+    public function __construct(ContainerInterface $container, $concrete)
     {
         $this->concrete = $concrete;
         $this->container = $container;
