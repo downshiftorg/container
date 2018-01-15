@@ -1,6 +1,6 @@
 <?php
 
-namespace NetRivet\Container;
+namespace DownShift\Container;
 
 interface ContextualBindingBuilderInterface
 {

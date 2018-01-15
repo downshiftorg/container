@@ -1,6 +1,6 @@
 <?php
 
-namespace NetRivet\Container\Test;
+namespace DownShift\Container\Test;
 
 interface BarInterface
 {

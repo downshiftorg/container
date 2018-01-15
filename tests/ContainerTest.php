@@ -1,6 +1,6 @@
 <?php
 
-namespace NetRivet\Container;
+namespace DownShift\Container;
 
 class ContainerTest extends \PHPUnit_Framework_TestCase
 {
@@ -18,35 +18,35 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
 
     public function testCanResolveDependencies()
     {
-        $qux = $this->container->make('NetRivet\Container\Test\Qux');
+        $qux = $this->container->make('DownShift\Container\Test\Qux');
 
         $baz = $qux->getBaz();
 
-        $this->assertInstanceOf('NetRivet\Container\Test\Baz', $baz);
+        $this->assertInstanceOf('DownShift\Container\Test\Baz', $baz);
     }
 
 
     public function testCanBindInterfaceToImplementationUsingBind()
     {
-        $this->container->bind('NetRivet\Container\Test\BarInterface', 'NetRivet\Container\Test\Bar1');
-        $foo = $this->container->make('NetRivet\Container\Test\Foo');
+        $this->container->bind('DownShift\Container\Test\BarInterface', 'DownShift\Container\Test\Bar1');
+        $foo = $this->container->make('DownShift\Container\Test\Foo');
 
         $bar = $foo->getBar();
 
-        $this->assertInstanceOf('NetRivet\Container\Test\Bar1', $bar);
+        $this->assertInstanceOf('DownShift\Container\Test\Bar1', $bar);
     }
 
 
     public function testCanBindInterfaceUsingWhenNeedsGive()
     {
         $this->container
-            ->when('NetRivet\Container\Test\Foo')
-            ->needs('NetRivet\Container\Test\BarInterface')
-            ->give('NetRivet\Container\Test\Bar2');
+            ->when('DownShift\Container\Test\Foo')
+            ->needs('DownShift\Container\Test\BarInterface')
+            ->give('DownShift\Container\Test\Bar2');
 
-        $foo = $this->container->make('NetRivet\Container\Test\Foo');
+        $foo = $this->container->make('DownShift\Container\Test\Foo');
         $bar = $foo->getBar();
 
-        $this->assertInstanceOf('NetRivet\Container\Test\Bar2', $bar);
+        $this->assertInstanceOf('DownShift\Container\Test\Bar2', $bar);
     }
 }
