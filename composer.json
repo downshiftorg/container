@@ -1,8 +1,8 @@
 {
-    "name": "netrivet/container",
+    "name": "downshiftorg/container",
     "description": "A PHP 5.3 compatible fork of the illuminate/container package.",
     "license": "MIT",
-    "homepage": "https://github.com/netrivet/container",
+    "homepage": "https://github.com/downshiftorg/container",
     "authors": [
         {
             "name": "Taylor Otwell",
@@ -10,7 +10,7 @@
         },
         {
             "name": "Jared Henderson",
-            "email": "jared@netrivet.com"
+            "email": "jared@pro.photo"
         }
     ],
     "require": {
@@ -22,12 +22,12 @@
     },
     "autoload": {
         "psr-4": {
-            "NetRivet\\Container\\": "src/"
+            "DownShift\\Container\\": "src/"
         }
     },
    "autoload-dev": {
        "psr-4": {
-           "NetRivet\\Container\\Test\\": "tests/fixtures"
+           "DownShift\\Container\\Test\\": "tests/fixtures"
        }
    },
     "minimum-stability": "dev"

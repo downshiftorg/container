@@ -1,13 +1,13 @@
 <?php
 
-namespace NetRivet\Container;
+namespace DownShift\Container;
 
 class ContextualBindingBuilder implements ContextualBindingBuilderInterface
 {
     /**
      * The underlying container instance.
      *
-     * @var \NetRivet\Container\ContainerInterface
+     * @var \DownShift\Container\ContainerInterface
      */
     protected $container;
 
@@ -28,7 +28,7 @@ class ContextualBindingBuilder implements ContextualBindingBuilderInterface
     /**
      * Create a new contextual binding builder.
      *
-     * @param  \NetRivet\Container\ContainerInterface  $container
+     * @param  \DownShift\Container\ContainerInterface  $container
      * @param  string  $concrete
      * @return void
      */

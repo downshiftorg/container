@@ -1,6 +1,6 @@
 <?php
 
-namespace NetRivet\Container;
+namespace DownShift\Container;
 
 class BindingResolutionException extends \Exception
 {

@@ -5,7 +5,7 @@ This is a fork of Taylor Otwell's [illuminate/container](https://github.com/illu
 ## Installation
 
 ```
-$ composer require netrivet\container
+$ composer require downshiftorg\container
 ```
 
 ## Usage

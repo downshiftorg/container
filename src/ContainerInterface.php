@@ -1,6 +1,6 @@
 <?php
 
-namespace NetRivet\Container;
+namespace DownShift\Container;
 
 use Closure;
 
@@ -93,7 +93,7 @@ interface ContainerInterface
      * Define a contextual binding.
      *
      * @param  string  $concrete
-     * @return \NetRivet\Container\ContextualBindingBuilderInterface
+     * @return \DownShift\Container\ContextualBindingBuilderInterface
      */
     public function when($concrete);
 

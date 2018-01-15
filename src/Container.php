@@ -1,6 +1,6 @@
 <?php
 
-namespace NetRivet\Container;
+namespace DownShift\Container;
 
 use Closure;
 use ArrayAccess;
@@ -114,7 +114,7 @@ class Container implements ArrayAccess, ContainerInterface
      * Define a contextual binding.
      *
      * @param  string  $concrete
-     * @return \NetRivet\Container\ContextualBindingBuilder
+     * @return \DownShift\Container\ContextualBindingBuilder
      */
     public function when($concrete)
     {
@@ -706,7 +706,7 @@ class Container implements ArrayAccess, ContainerInterface
      * @param  array   $parameters
      * @return mixed
      *
-     * @throws \NetRivet\Container\BindingResolutionException
+     * @throws \DownShift\Container\BindingResolutionException
      */
     public function build($concrete, array $parameters = array())
     {
@@ -794,7 +794,7 @@ class Container implements ArrayAccess, ContainerInterface
      * @param  \ReflectionParameter  $parameter
      * @return mixed
      *
-     * @throws \NetRivet\Container\BindingResolutionException
+     * @throws \DownShift\Container\BindingResolutionException
      */
     protected function resolveNonClass(ReflectionParameter $parameter)
     {
@@ -821,7 +821,7 @@ class Container implements ArrayAccess, ContainerInterface
      * @param  \ReflectionParameter  $parameter
      * @return mixed
      *
-     * @throws \NetRivet\Container\BindingResolutionException
+     * @throws \DownShift\Container\BindingResolutionException
      */
     protected function resolveClass(ReflectionParameter $parameter)
     {
@@ -1120,7 +1120,7 @@ class Container implements ArrayAccess, ContainerInterface
     /**
      * Set the shared instance of the container.
      *
-     * @param  \NetRivet\Container\ContainerInterface  $container
+     * @param  \DownShift\Container\ContainerInterface  $container
      * @return void
      */
     public static function setInstance(ContainerInterface $container)
