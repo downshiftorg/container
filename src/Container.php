@@ -548,12 +548,13 @@ class Container implements ArrayAccess, ContainerInterface
      */
     protected function addDependencyForCallParameter(ReflectionParameter $parameter, array &$parameters, &$dependencies)
     {
+        $parameterType = $this->getParameterType($parameter);
         if (array_key_exists($parameter->name, $parameters)) {
             $dependencies[] = $parameters[$parameter->name];
 
             unset($parameters[$parameter->name]);
-        } elseif ($parameter->getClass()) {
-            $dependencies[] = $this->make($parameter->getClass()->name);
+        } elseif ($parameterType) {
+            $dependencies[] = $this->make($parameterType->getName());
         } elseif ($parameter->isDefaultValueAvailable()) {
             $dependencies[] = $parameter->getDefaultValue();
         }
@@ -769,16 +770,15 @@ class Container implements ArrayAccess, ContainerInterface
     protected function getDependencies(array $parameters, array $primitives = array())
     {
         $dependencies = array();
-
         foreach ($parameters as $parameter) {
-            $dependency = $parameter->getClass();
+            $reflectionType = $this->getParameterType($parameter);
 
             // If the class is null, it means the dependency is a string or some other
             // primitive type which we can not resolve since it is not a class and
             // we will just bomb out with an error since we have no-where to go.
             if (array_key_exists($parameter->name, $primitives)) {
                 $dependencies[] = $primitives[$parameter->name];
-            } elseif (is_null($dependency)) {
+            } elseif (is_null($reflectionType)) {
                 $dependencies[] = $this->resolveNonClass($parameter);
             } else {
                 $dependencies[] = $this->resolveClass($parameter);
@@ -818,15 +818,16 @@ class Container implements ArrayAccess, ContainerInterface
     /**
      * Resolve a class based dependency from the container.
      *
-     * @param  \ReflectionParameter  $parameter
+     * @param  \ReflectionParameterType  $parameter
      * @return mixed
      *
      * @throws \DownShift\Container\BindingResolutionException
      */
     protected function resolveClass(ReflectionParameter $parameter)
     {
+        $reflectionType = $this->getParameterType($parameter);
         try {
-            return $this->make($parameter->getClass()->name);
+            return $this->make($reflectionType->getName());
         }
 
         // If we can not resolve the class instance, we will check to see if the value
@@ -943,12 +944,13 @@ class Container implements ArrayAccess, ContainerInterface
 
         $parameters = $function->getParameters();
         $expected = $parameters[0];
+        $expectedType = $this->getParameterType($expected);
 
-        if (!$expected->getClass()) {
+        if (! $expectedType) {
             return;
         }
 
-        return $expected->getClass()->name;
+        return $expectedType->getName();
     }
 
     /**
@@ -1203,5 +1205,22 @@ class Container implements ArrayAccess, ContainerInterface
     public function __set($key, $value)
     {
         $this[$key] = $value;
+    }
+
+    /**
+     * Get a parameter name from a ReflectionParameter
+     * 
+     * @param ReflectionParameter $parameter
+     * @return null|ReflectionNamedType
+     */
+    public function getParameterType(ReflectionParameter $parameter)
+    {
+        $reflectionType = $parameter->getType();
+
+        if ($reflectionType instanceof ReflectionUnionType) {
+            return $reflectionType->getTypes()[0];
+        }
+
+        return $reflectionType;
     }
 }

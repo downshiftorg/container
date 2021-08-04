@@ -1,6 +1,6 @@
-# PHP 5.3-compatible illuminate/container
+# PHP 8.0-compatible illuminate/container
 
-This is a fork of Taylor Otwell's [illuminate/container](https://github.com/illuminate/container) modified to be backwards compatible with PHP 5.3.
+This is a fork of Taylor Otwell's [illuminate/container](https://github.com/illuminate/container) modified to be backwards compatible with PHP 5.3 - 8.0.
 
 ## Installation
 
